@@ -7,6 +7,7 @@ import {
 } from "~/server/api/trpc";
 
 import { extractYoutubeId, getYoutubeTitle } from "~/lib/youtube";
+import { notificationQueue } from "~/server/queue";
 
 export const videoRouter = createTRPCRouter({
   // TESTING PURPOSE ONLY
@@ -32,7 +33,7 @@ export const videoRouter = createTRPCRouter({
 
       const title = await getYoutubeTitle(videoId);
 
-      return ctx.db.video.create({
+      const video = await ctx.db.video.create({
         data: {
           url: input.url,
           youtubeId: videoId,
@@ -41,6 +42,13 @@ export const videoRouter = createTRPCRouter({
           userId: ctx.session.user.id,
         },
       });
+
+      await notificationQueue.add("new-video", {
+        title,
+        user: ctx.session.user,
+      });
+
+      return video;
     }),
 
   // GET ALL VIDEOS

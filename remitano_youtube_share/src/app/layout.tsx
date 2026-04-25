@@ -5,6 +5,7 @@ import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { Providers } from "~/app/_utils/provider";
+import NotificationBanner from "~/app/_components/NotificationBanner";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -28,7 +29,10 @@ export default function RootLayout({
       >
         <TRPCReactProvider>
           <Providers>
-            <main>{children}</main>
+            <main>
+              <NotificationBanner />
+              {children}
+            </main>
           </Providers>
         </TRPCReactProvider>
       </body>
