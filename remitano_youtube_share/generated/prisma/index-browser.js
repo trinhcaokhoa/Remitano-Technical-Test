@@ -123,12 +123,20 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.VideoScalarFieldEnum = {
   id: 'id',
-  title: 'title',
   url: 'url',
   youtubeId: 'youtubeId',
+  title: 'title',
+  description: 'description',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
   userId: 'userId'
+};
+
+exports.Prisma.VoteScalarFieldEnum = {
+  id: 'id',
+  value: 'value',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  videoId: 'videoId'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {
@@ -186,6 +194,7 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   Video: 'Video',
+  Vote: 'Vote',
   Account: 'Account',
   Session: 'Session',
   User: 'User',

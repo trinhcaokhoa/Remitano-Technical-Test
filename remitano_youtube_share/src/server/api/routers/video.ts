@@ -9,7 +9,7 @@ import {
 import { extractYoutubeId, getYoutubeTitle } from "~/lib/youtube";
 
 export const videoRouter = createTRPCRouter({
-  // Optional test route (like hello)
+  // TESTING PURPOSE ONLY
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
     .query(({ input }) => {
@@ -18,14 +18,17 @@ export const videoRouter = createTRPCRouter({
       };
     }),
 
-  // 🎥 CREATE VIDEO (core feature)
+  // CREATE VIDEO
   create: protectedProcedure
-    .input(z.object({ url: z.string().min(1) }))
+    .input(
+      z.object({
+        url: z.string(),
+        description: z.string().optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const videoId = extractYoutubeId(input.url);
-      if (!videoId) {
-        throw new Error("Invalid YouTube URL");
-      }
+      if (!videoId) throw new Error("Invalid URL");
 
       const title = await getYoutubeTitle(videoId);
 
@@ -34,22 +37,24 @@ export const videoRouter = createTRPCRouter({
           url: input.url,
           youtubeId: videoId,
           title,
-          user: {
-            connect: { id: ctx.session.user.id },
-          },
+          description: input.description,
+          userId: ctx.session.user.id,
         },
       });
     }),
 
-  // 📺 GET ALL VIDEOS (feed)
+  // GET ALL VIDEOS
   getAll: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.video.findMany({
-      include: { user: true },
+      include: {
+        user: true,
+        votes: true,
+      },
       orderBy: { createdAt: "desc" },
     });
   }),
 
-  // 🔍 OPTIONAL: get latest by current user
+  //   get latest by current user
   getLatest: protectedProcedure.query(async ({ ctx }) => {
     const video = await ctx.db.video.findFirst({
       orderBy: { createdAt: "desc" },
