@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { auth } from "~/server/auth";
 import { HydrateClient } from "~/trpc/server";
+import Headbar from "~/app/_components/Headbar";
 
 export default async function Home() {
   const session = await auth();
 
   return (
     <HydrateClient>
+      <Headbar />
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#0f172a] to-[#020617] text-white">
         <div className="container flex flex-col items-center justify-center gap-10 px-4 py-16">
           {/* Title */}
