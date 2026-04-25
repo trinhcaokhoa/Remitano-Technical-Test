@@ -1,4 +1,4 @@
-import { vi } from "vitest";
+import { afterAll, afterEach, beforeAll, vi } from "vitest";
 
 // Mock environment variables
 process.env.NEXTAUTH_SECRET = "test-secret";
