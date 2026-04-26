@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import io, { type Socket } from "socket.io-client";
+import io from "socket.io-client";
 
 type Notification = {
   type: string;
@@ -14,7 +14,7 @@ type Notification = {
 
 export default function NotificationBanner() {
   const [notification, setNotification] = useState<Notification | null>(null);
-  const [setSocket] = useState<Socket | null>(null);
+  // const _socket = useState<Socket | null>(null);
 
   useEffect(() => {
     // Get the socket server URL
@@ -55,7 +55,7 @@ export default function NotificationBanner() {
       console.error("✗ Connection error:", error);
     });
 
-    setSocket(newSocket);
+    // Socket connection established
 
     return () => {
       newSocket.close();
@@ -73,7 +73,7 @@ export default function NotificationBanner() {
 
       <p className="mt-1 font-bold">{notification.title}</p>
 
-      <p className="text-xs text-gray-400">by {userName}</p>
+      <p className="text-xs text-gray-400">by {userName ?? "Unknown"}</p>
     </div>
   );
 }

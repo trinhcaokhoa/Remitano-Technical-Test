@@ -24,7 +24,7 @@ describe("Notification Queue - Unit Tests", () => {
       },
     };
 
-    const result = await mockQueue.add("new-video", jobData);
+    const result = (await mockQueue.add("new-video", jobData)) as unknown;
 
     expect(mockQueue.add).toHaveBeenCalledWith("new-video", jobData);
     expect(result).toEqual({ id: "job-123" });

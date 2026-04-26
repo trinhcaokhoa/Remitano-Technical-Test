@@ -16,13 +16,13 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "preview": "next build && next start",
-    "socket": "tsx src/server/socket.ts",
     "start": "next start",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
+    "socket": "tsx watch src/server/socket.ts",
     "worker": "tsx src/server/worker.ts"
   },
   "dependencies": {

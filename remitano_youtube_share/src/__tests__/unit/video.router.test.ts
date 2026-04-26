@@ -65,14 +65,14 @@ describe("Video Router - Create Mutation", () => {
       description: mockDescription,
     };
 
-    const createdVideo = await mockPrismaClient.video.create({
+    const createdVideo = (await mockPrismaClient.video.create({
       data: {
         ...videoData,
         youtubeId: "test123",
         title: "Video Title for test123",
         userId: mockUserId,
       },
-    });
+    })) as unknown as { title: unknown };
 
     await mockQueue.add("new-video", {
       title: createdVideo.title,
@@ -139,13 +139,13 @@ describe("Video Router - Create Mutation", () => {
 
     mockPrismaClient.video.findMany.mockResolvedValueOnce(mockVideos);
 
-    const result = await mockPrismaClient.video.findMany({
+    const result = (await mockPrismaClient.video.findMany({
       include: {
         user: true,
         votes: true,
       },
       orderBy: { createdAt: "desc" },
-    });
+    })) as unknown;
 
     expect(result).toEqual(mockVideos);
     expect(mockPrismaClient.video.findMany).toHaveBeenCalledWith({
@@ -169,10 +169,10 @@ describe("Video Router - Create Mutation", () => {
 
     mockPrismaClient.video.findFirst.mockResolvedValueOnce(mockLatestVideo);
 
-    const result = await mockPrismaClient.video.findFirst({
+    const result = (await mockPrismaClient.video.findFirst({
       orderBy: { createdAt: "desc" },
       where: { userId: mockUserId },
-    });
+    })) as unknown;
 
     expect(result).toEqual(mockLatestVideo);
     expect(mockPrismaClient.video.findFirst).toHaveBeenCalledWith({

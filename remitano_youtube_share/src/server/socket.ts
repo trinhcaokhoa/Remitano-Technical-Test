@@ -2,12 +2,12 @@ import { createServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import { redis } from "./redis";
 
-const PORT = process.env.SOCKET_PORT || 3001;
+const PORT = process.env.SOCKET_PORT ?? 3001;
 
 const httpServer = createServer();
 const io = new SocketIOServer(httpServer, {
   cors: {
-    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+    origin: process.env.CORS_ORIGIN ?? "http://localhost:3000",
     methods: ["GET", "POST"],
   },
   transports: ["websocket", "polling"],
@@ -18,10 +18,10 @@ console.log("Socket.io server starting on port", PORT);
 // Subscribe to Redis pub/sub channel
 const subscriber = redis.duplicate();
 
-subscriber.on("message", (channel, message) => {
+subscriber.on("message", (channel: string, message: string): void => {
   if (channel === "notifications") {
     try {
-      const data = JSON.parse(message);
+      const data = JSON.parse(message) as unknown;
       console.log("Broadcasting notification:", data);
       io.emit("notification", data);
     } catch (err) {
@@ -30,13 +30,16 @@ subscriber.on("message", (channel, message) => {
   }
 });
 
-subscriber.subscribe("notifications", (err) => {
-  if (err) {
-    console.error("Failed to subscribe to notifications channel:", err);
-  } else {
-    console.log("✓ Successfully subscribed to Redis notifications channel");
-  }
-});
+void subscriber.subscribe(
+  "notifications",
+  (err: Error | null | undefined): void => {
+    if (err) {
+      console.error("Failed to subscribe to notifications channel:", err);
+    } else {
+      console.log("✓ Successfully subscribed to Redis notifications channel");
+    }
+  },
+);
 
 io.on("connection", (socket) => {
   console.log("✓ Client connected:", socket.id);
@@ -55,10 +58,10 @@ httpServer.listen(PORT, () => {
 });
 
 // Graceful shutdown
-process.on("SIGINT", () => {
+process.on("SIGINT", (): void => {
   console.log("Shutting down Socket.io server...");
-  subscriber.unsubscribe();
-  subscriber.quit();
+  void subscriber.unsubscribe();
+  void subscriber.quit();
   httpServer.close(() => {
     console.log("Socket.io server closed");
     process.exit(0);

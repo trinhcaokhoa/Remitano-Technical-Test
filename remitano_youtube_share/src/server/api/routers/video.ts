@@ -31,7 +31,7 @@ export const videoRouter = createTRPCRouter({
       const videoId = extractYoutubeId(input.url);
       if (!videoId) throw new Error("Invalid URL");
 
-      const title = await getYoutubeTitle(videoId);
+      const title: string = await getYoutubeTitle(videoId);
 
       const video = await ctx.db.video.create({
         data: {
@@ -43,9 +43,9 @@ export const videoRouter = createTRPCRouter({
         },
       });
 
-      await notificationQueue.add("new-video", {
+      void notificationQueue.add("new-video", {
         title,
-        user: ctx.session.user,
+        user: ctx.session.user as unknown,
       });
 
       return video;

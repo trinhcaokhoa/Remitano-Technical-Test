@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { api } from "~/trpc/react";
 import Headbar from "~/app/_components/Headbar";
 
@@ -42,8 +42,8 @@ export default function VideosPage() {
     });
   };
 
-  const getScore = (video: any) =>
-    video.votes?.reduce((acc: number, v: any) => acc + v.value, 0) ?? 0;
+  const getScore = (video: { votes: Array<{ value: number }> }) =>
+    video.votes.reduce((acc: number, v: { value: number }) => acc + v.value, 0);
 
   return (
     <>

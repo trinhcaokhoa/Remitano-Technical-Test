@@ -1,6 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mockPrismaClient, mockQueue, mockRedis, mockIO } from "../mocks";
 
+type NotificationPayload = {
+  type: string;
+  user: {
+    name: string;
+  };
+};
+
 vi.mock("~/server/db", () => ({
   db: mockPrismaClient,
 }));
@@ -38,7 +45,7 @@ describe("Notification System - Integration Tests", () => {
     mockPrismaClient.video.create.mockResolvedValueOnce(createdVideo);
 
     // Create video
-    const video = await mockPrismaClient.video.create({
+    const video = (await mockPrismaClient.video.create({
       data: {
         url: videoUrl,
         youtubeId: "test123",
@@ -46,7 +53,7 @@ describe("Notification System - Integration Tests", () => {
         description: "Test description",
         userId,
       },
-    });
+    })) as unknown;
 
     expect(video).toEqual(createdVideo);
 
@@ -58,9 +65,9 @@ describe("Notification System - Integration Tests", () => {
 
     mockQueue.add.mockResolvedValueOnce({ id: "job-123" });
 
-    const job = await mockQueue.add("new-video", jobData);
+    const job = (await mockQueue.add("new-video", jobData)) as unknown;
 
-    expect(job.id).toBe("job-123");
+    expect((job as any).id).toBe("job-123");
     expect(mockQueue.add).toHaveBeenCalledWith("new-video", jobData);
 
     // Step 3: Worker processes job and publishes to Redis
@@ -109,7 +116,7 @@ describe("Notification System - Integration Tests", () => {
       mockQueue.add.mockResolvedValueOnce({ id: `job-${video.id}` });
     }
 
-    const createdVideos = await Promise.all(
+    const createdVideos = (await Promise.all(
       videos.map((v) =>
         mockPrismaClient.video.create({
           data: {
@@ -121,16 +128,16 @@ describe("Notification System - Integration Tests", () => {
           },
         }),
       ),
-    );
+    )) as unknown[];
 
-    const jobs = await Promise.all(
+    const jobs = (await Promise.all(
       videos.map((v) =>
         mockQueue.add("new-video", {
           title: v.title,
           user: { id: v.userId },
         }),
       ),
-    );
+    )) as unknown[];
 
     expect(createdVideos).toHaveLength(5);
     expect(jobs).toHaveLength(5);
@@ -139,7 +146,7 @@ describe("Notification System - Integration Tests", () => {
   });
 
   it("should handle redis subscription and message handling", async () => {
-    const subscriber = mockRedis.duplicate();
+    const subscriber = mockRedis.duplicate() as any;
 
     // Subscribe to channel
     await subscriber.subscribe("notifications");
@@ -173,9 +180,12 @@ describe("Notification System - Integration Tests", () => {
 
       // Retry
       mockQueue.add.mockResolvedValueOnce({ id: "job-456" });
-      const retryResult = await mockQueue.add("new-video", jobData);
+      const retryResult = (await mockQueue.add(
+        "new-video",
+        jobData,
+      )) as unknown;
 
-      expect(retryResult.id).toBe("job-456");
+      expect((retryResult as any).id).toBe("job-456");
     }
   });
 
@@ -190,7 +200,7 @@ describe("Notification System - Integration Tests", () => {
     };
 
     const serialized = JSON.stringify(originalData);
-    const deserialized = JSON.parse(serialized);
+    const deserialized = JSON.parse(serialized) as NotificationPayload;
 
     expect(deserialized).toEqual(originalData);
     expect(deserialized.type).toBe("NEW_VIDEO");
@@ -211,7 +221,7 @@ describe("Notification System - Integration Tests", () => {
       { id: "client-3", emit: vi.fn() },
     ];
 
-    clients.forEach((client) => {
+    clients.forEach(() => {
       mockIO.emit("notification", notificationData);
     });
 
