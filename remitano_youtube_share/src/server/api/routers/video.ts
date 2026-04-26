@@ -38,7 +38,7 @@ export const videoRouter = createTRPCRouter({
           url: input.url,
           youtubeId: videoId,
           title,
-          description: input.description,
+          description: input.description ?? "",
           userId: ctx.session.user.id,
         },
       });

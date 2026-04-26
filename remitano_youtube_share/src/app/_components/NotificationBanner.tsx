@@ -14,12 +14,12 @@ type Notification = {
 
 export default function NotificationBanner() {
   const [notification, setNotification] = useState<Notification | null>(null);
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const [setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
     // Get the socket server URL
     const socketUrl =
-      process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3001";
+      process.env.NEXT_PUBLIC_SOCKET_URL ?? "http://localhost:3001";
 
     // Initialize Socket.io connection
     const newSocket = io(socketUrl, {
@@ -65,7 +65,7 @@ export default function NotificationBanner() {
   if (!notification) return null;
 
   const userName =
-    notification.user?.name || notification.user?.email || "Unknown";
+    notification.user?.name ?? notification.user?.email ?? "Unknown";
 
   return (
     <div className="animate-in fade-in slide-in-from-top fixed top-4 left-4 z-50 w-80 rounded-xl border border-white/10 bg-black/90 p-4 text-white shadow-lg">
