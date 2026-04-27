@@ -2,7 +2,7 @@ import { createServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import { redis } from "./redis";
 
-const PORT = process.env.PORT ?? 3001; // ✅ Railway-compatible
+const PORT = process.env.PORT ; // ✅ Railway-compatible
 
 const httpServer = createServer();
 
