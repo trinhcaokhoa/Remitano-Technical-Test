@@ -8,7 +8,7 @@ const httpServer = createServer();
 
 const io = new SocketIOServer(httpServer, {
   cors: {
-    origin: process.env.CORS_ORIGIN || "*",
+    origin: process.env.CORS_ORIGIN ?? "*",
     methods: ["GET", "POST"],
   },
 });
