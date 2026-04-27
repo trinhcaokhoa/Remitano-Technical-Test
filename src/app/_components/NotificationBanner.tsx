@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import io from "socket.io-client";
+import io, { type Socket } from "socket.io-client";
 
 type Notification = {
   type: string;
@@ -14,21 +14,20 @@ type Notification = {
 
 export default function NotificationBanner() {
   const [notification, setNotification] = useState<Notification | null>(null);
-  // const _socket = useState<Socket | null>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
     // Get the socket server URL
     const socketUrl =
-      process.env.NEXT_PUBLIC_SOCKET_URL ;
-    console.log("SOCKET URL:", process.env.NEXT_PUBLIC_SOCKET_URL);
+      process.env.NEXT_PUBLIC_SOCKET_URL ?? "http://localhost:3001";
 
     // Initialize Socket.io connection
     const newSocket = io(socketUrl, {
-      transports: ["websocket"],
+      transports: ["websocket", "polling"],
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
-      reconnectionAttempts: 10,
+      reconnectionAttempts: 5,
     });
 
     newSocket.on("connect", () => {
@@ -44,7 +43,7 @@ export default function NotificationBanner() {
         // auto hide after 4s
         setTimeout(() => {
           setNotification(null);
-        }, 40000);
+        }, 4000);
       }
     });
 
@@ -56,7 +55,7 @@ export default function NotificationBanner() {
       console.error("✗ Connection error:", error);
     });
 
-    // Socket connection established
+    setSocket(newSocket);
 
     return () => {
       newSocket.close();
@@ -74,7 +73,7 @@ export default function NotificationBanner() {
 
       <p className="mt-1 font-bold">{notification.title}</p>
 
-      <p className="text-xs text-gray-400">by {userName ?? "Unknown"}</p>
+      <p className="text-xs text-gray-400">by {userName}</p>
     </div>
   );
 }
