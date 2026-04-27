@@ -27,7 +27,7 @@ export default function NotificationBanner() {
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
-      reconnectionAttempts: 5,
+      reconnectionAttempts: 10,
     });
 
     newSocket.on("connect", () => {
@@ -43,7 +43,7 @@ export default function NotificationBanner() {
         // auto hide after 4s
         setTimeout(() => {
           setNotification(null);
-        }, 4000);
+        }, 40000);
       }
     });
 
