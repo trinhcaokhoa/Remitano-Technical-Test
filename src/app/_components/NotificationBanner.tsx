@@ -19,7 +19,7 @@ export default function NotificationBanner() {
   useEffect(() => {
     // Get the socket server URL
     const socketUrl =
-      process.env.NEXT_PUBLIC_SOCKET_URL ?? "http://localhost:3001";
+      process.env.NEXT_PUBLIC_SOCKET_URL ;
 
     // Initialize Socket.io connection
     const newSocket = io(socketUrl, {
