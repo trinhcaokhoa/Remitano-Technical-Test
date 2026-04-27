@@ -24,7 +24,7 @@ export default function NotificationBanner() {
 
     // Initialize Socket.io connection
     const newSocket = io(socketUrl, {
-      transports: ["websocket", "polling"],
+      transports: ["websocket"],
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
