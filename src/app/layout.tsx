@@ -5,7 +5,7 @@ import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { Providers } from "~/app/_utils/provider";
-import NotificationBanner from "~/app/_components/NotificationBanner";
+import NotificationBanner from "~/app/_components/NotificationBanner"; 
 
 export const metadata: Metadata = {
   title: "REMITANO YOUTUBE SHARE",

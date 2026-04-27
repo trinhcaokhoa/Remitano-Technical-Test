@@ -14,6 +14,9 @@ export const env = createEnv({
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
     DATABASE_URL: z.string().url(),
+    REDIS_URL: z.string().url(),
+    SOCKET_PORT: z.string().default("3001"),
+    CORS_ORIGIN: z.string().url().default("http://localhost:3000"),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -38,6 +41,9 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
+    REDIS_URL: process.env.REDIS_URL,
+    SOCKET_PORT: process.env.SOCKET_PORT,
+    CORS_ORIGIN: process.env.CORS_ORIGIN,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

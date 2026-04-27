@@ -2,7 +2,7 @@ import { createServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import { redis } from "./redis";
 
-const PORT = process.env.PORT ;
+const PORT = process.env.SOCKET_PORT; // ✅ Railway-compatible
 
 const httpServer = createServer();
 
@@ -11,17 +11,26 @@ const io = new SocketIOServer(httpServer, {
     origin: process.env.CORS_ORIGIN,
     methods: ["GET", "POST"],
   },
+  transports: ["websocket"],
 });
 
+console.log("Socket.io server starting on port", PORT);
 
+// ✅ Define a safe type
+type Notification = {
+  type: string;
+  title: string;
+  user: unknown;
+};
 
 // Subscribe to Redis pub/sub channel
 const subscriber = redis.duplicate();
 
-subscriber.on("message", (channel: string, message: string): void => {
+subscriber.on("message", (channel: string, message: string) => {
   if (channel === "notifications") {
     try {
-      const data = JSON.parse(message) as unknown;
+      const data = JSON.parse(message) as Notification; // ✅ FIXED
+
       console.log("Broadcasting notification:", data);
       io.emit("notification", data);
     } catch (err) {
@@ -30,16 +39,14 @@ subscriber.on("message", (channel: string, message: string): void => {
   }
 });
 
-void subscriber.subscribe(
-  "notifications",
-  (err: Error | null | undefined): void => {
-    if (err) {
-      console.error("Failed to subscribe to notifications channel:", err);
-    } else {
-      console.log("✓ Successfully subscribed to Redis notifications channel");
-    }
-  },
-);
+// ✅ FIX: handle promise
+void subscriber.subscribe("notifications", (err) => {
+  if (err) {
+    console.error("Failed to subscribe:", err);
+  } else {
+    console.log("✓ Subscribed to notifications channel");
+  }
+});
 
 io.on("connection", (socket) => {
   console.log("✓ Client connected:", socket.id);
@@ -58,10 +65,12 @@ httpServer.listen(PORT, () => {
 });
 
 // Graceful shutdown
-process.on("SIGINT", (): void => {
+process.on("SIGINT", () => {
   console.log("Shutting down Socket.io server...");
-  void subscriber.unsubscribe();
-  void subscriber.quit();
+
+  void subscriber.unsubscribe(); // ✅ FIX
+  void subscriber.quit();        // ✅ FIX
+
   httpServer.close(() => {
     console.log("Socket.io server closed");
     process.exit(0);
