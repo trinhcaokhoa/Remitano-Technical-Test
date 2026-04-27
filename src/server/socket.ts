@@ -2,13 +2,13 @@ import { createServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import { redis } from "./redis";
 
-const PORT = process.env.PORT ?? 3001;
+const PORT = process.env.PORT ;
 
 const httpServer = createServer();
 
 const io = new SocketIOServer(httpServer, {
   cors: {
-    origin: process.env.CORS_ORIGIN ?? "*",
+    origin: process.env.CORS_ORIGIN,
     methods: ["GET", "POST"],
   },
 });

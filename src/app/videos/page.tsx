@@ -50,7 +50,7 @@ export default function VideosPage() {
   return (
     <>
       <Headbar />
-      <NotificationBanner />
+      
       <main className="min-h-screen bg-gray-950 p-6 text-white">
         <div className="mx-auto flex max-w-3xl flex-col gap-6">
           {/* Header */}
