@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: nextjs-web
+    ports:
+      - "3000:3000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    env_file: ../.env
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
+      - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL:-http://localhost:3000}
+      - AUTH_TRUST_HOST=true 
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.worker
+    container_name: worker
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    env_file: ../.env
+    environment:
+      - REDIS_URL=redis://redis:6379
+
+  socket:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.socket
+    container_name: socket-server
+    ports:
+      - "3001:3001"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - SOCKET_PORT=3001
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:3000}
