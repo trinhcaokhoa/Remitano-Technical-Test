@@ -38,6 +38,7 @@ export default tseslint.config(
   {
     files: ["**/__tests__/**/*.ts", "**/__tests__/**/*.tsx"],
     rules: {
+      "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unsafe-member-access": "off",
       "@typescript-eslint/no-unsafe-return": "off",
