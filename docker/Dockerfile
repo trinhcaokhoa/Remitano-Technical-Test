@@ -12,6 +12,7 @@ COPY . .
 
 RUN npx prisma generate
 
+ENV SKIP_ENV_VALIDATION=1
 RUN npm run build
 
 EXPOSE 3000
