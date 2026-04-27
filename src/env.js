@@ -16,6 +16,7 @@ export const env = createEnv({
     DATABASE_URL: z.string().url(),
     REDIS_URL: z.string().url(),
     SOCKET_PORT: z.string().default("3001"),
+    PUBLIC_SOCKET_URL: z.string().url().default("http://localhost:3001"),
     CORS_ORIGIN: z.string().url().default("http://localhost:3000"),
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -44,6 +45,7 @@ export const env = createEnv({
     REDIS_URL: process.env.REDIS_URL,
     SOCKET_PORT: process.env.SOCKET_PORT,
     CORS_ORIGIN: process.env.CORS_ORIGIN,
+    PUBLIC_SOCKET_URL: process.env.NEXT_PUBLIC_SOCKET_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
