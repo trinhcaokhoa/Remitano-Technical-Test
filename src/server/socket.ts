@@ -13,10 +13,6 @@ const io = new SocketIOServer(httpServer, {
   },
 });
 
-httpServer.listen(PORT, () => {
-  console.log(`Socket running on ${PORT}`);
-});
-
 
 
 // Subscribe to Redis pub/sub channel

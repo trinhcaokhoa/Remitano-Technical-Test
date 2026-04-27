@@ -22,7 +22,7 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
-    "socket": "tsx watch src/server/socket.ts",
+    "socket": "tsx src/server/socket.ts",
     "worker": "tsx src/server/worker.ts"
   },
   "dependencies": {
