@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { api } from "~/trpc/react";
 import Headbar from "~/app/_components/Headbar";
+import { No } from "zod/v4/locales";
+import NotificationBanner from "../_components/NotificationBanner";
+
 
 export default function VideosPage() {
   const [videoUrl, setVideoUrl] = useState("");
@@ -48,6 +51,7 @@ export default function VideosPage() {
   return (
     <>
       <Headbar />
+      <NotificationBanner />
       <main className="min-h-screen bg-gray-950 p-6 text-white">
         <div className="mx-auto flex max-w-3xl flex-col gap-6">
           {/* Header */}
