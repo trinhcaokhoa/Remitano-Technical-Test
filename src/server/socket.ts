@@ -2,18 +2,22 @@ import { createServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import { redis } from "./redis";
 
-const PORT = process.env.SOCKET_PORT ?? 3001;
+const PORT = process.env.PORT ?? 3001;
 
 const httpServer = createServer();
+
 const io = new SocketIOServer(httpServer, {
   cors: {
-    origin: process.env.CORS_ORIGIN ?? "http://localhost:3000",
+    origin: process.env.CORS_ORIGIN || "*",
     methods: ["GET", "POST"],
   },
-  transports: ["websocket", "polling"],
 });
 
-console.log("Socket.io server starting on port", PORT);
+httpServer.listen(PORT, () => {
+  console.log(`Socket running on ${PORT}`);
+});
+
+
 
 // Subscribe to Redis pub/sub channel
 const subscriber = redis.duplicate();
