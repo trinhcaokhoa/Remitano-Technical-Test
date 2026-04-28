@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import io, { type Socket } from "socket.io-client";
+import { env } from "~/env";
 
 type Notification = {
   type: string;
@@ -19,7 +20,7 @@ export default function NotificationBanner() {
   useEffect(() => {
     // Get the socket server URL
     const socketUrl =
-      process.env.NEXT_PUBLIC_SOCKET_URL ;
+      env.NEXT_PUBLIC_SOCKET_URL ;
 
     // Initialize Socket.io connection
     const newSocket = io(socketUrl, {
