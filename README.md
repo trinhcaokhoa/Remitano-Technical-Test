@@ -84,6 +84,10 @@ GOOGLE_CLIENT_SECRET=""
 
 DATABASE_URL=""
 
+REDIS_URL="redis://redis:6379"
+NEXT_PUBLIC_SOCKET_URL="http://localhost:3001"
+CORS_ORIGIN="http://localhost:3000"
+
   
 ```
 
