@@ -22,7 +22,7 @@ export default function NotificationBanner() {
       process.env.NEXT_PUBLIC_SOCKET_URL ;
 
     // Initialize Socket.io connection
-    const newSocket = io("https://socket-production-530a.up.railway.app", {
+    const newSocket = io(socketUrl, {
       transports: ["websocket", "polling"],
       reconnection: true,
       reconnectionDelay: 1000,
