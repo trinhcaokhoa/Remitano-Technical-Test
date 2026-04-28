@@ -1,20 +1,21 @@
 import { createServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import { redis } from "./redis";
-
-const PORT = process.env.SOCKET_PORT; // ✅ Railway-compatible
+import { hostname } from "os";
+const port = Number(process.env.PORT) || 3001;
 
 const httpServer = createServer();
+
+
 
 const io = new SocketIOServer(httpServer, {
   cors: {
     origin: process.env.CORS_ORIGIN,
     methods: ["GET", "POST"],
   },
-  transports: ["websocket"],
+  transports: ["polling", "websocket"],
 });
-
-console.log("Socket.io server starting on port", PORT);
+console.log("Socket.io server starting on port", port);
 
 // ✅ Define a safe type
 type Notification = {
@@ -60,8 +61,8 @@ io.on("connection", (socket) => {
   });
 });
 
-httpServer.listen(PORT, () => {
-  console.log(`✓ Socket.io server listening on port ${PORT}`);
+httpServer.listen(port, "0.0.0.0", () => {
+  console.log(`Socket.IO server running on port ${port}`);
 });
 
 // Graceful shutdown
