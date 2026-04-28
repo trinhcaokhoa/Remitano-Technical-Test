@@ -35,7 +35,7 @@ export default function NotificationBanner() {
     });
 
     newSocket.on("notification", (data: Notification) => {
-      console.log("✓ Received notification:", data);
+      console.log(" Received notification:", data);
 
       if (data.type === "NEW_VIDEO") {
         setNotification(data);
@@ -52,7 +52,7 @@ export default function NotificationBanner() {
     });
 
     newSocket.on("connect_error", (error) => {
-      console.error("✗ Connection error:", error);
+      console.error(" Connection error:", error);
     });
 
     setSocket(newSocket);
