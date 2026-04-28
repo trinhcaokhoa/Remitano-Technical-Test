@@ -81,7 +81,7 @@ GOOGLE_CLIENT_SECRET=""
 # Prisma
 
 # https://www.prisma.io/docs/reference/database-reference/connection-urls#env
-
+# https://neon.com/docs/get-started/connect-neon
 DATABASE_URL=""
 
 REDIS_URL="redis://redis:6379"
