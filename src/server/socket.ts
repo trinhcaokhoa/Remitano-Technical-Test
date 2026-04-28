@@ -1,7 +1,6 @@
 import { createServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import { redis } from "./redis";
-import { hostname } from "os";
 const port = Number(process.env.PORT) || 3001;
 
 const httpServer = createServer();
@@ -17,7 +16,7 @@ const io = new SocketIOServer(httpServer, {
 });
 console.log("Socket.io server starting on port", port);
 
-// ✅ Define a safe type
+
 type Notification = {
   type: string;
   title: string;
@@ -30,7 +29,7 @@ const subscriber = redis.duplicate();
 subscriber.on("message", (channel: string, message: string) => {
   if (channel === "notifications") {
     try {
-      const data = JSON.parse(message) as Notification; // ✅ FIXED
+      const data = JSON.parse(message) as Notification; 
 
       console.log("Broadcasting notification:", data);
       io.emit("notification", data);
@@ -40,7 +39,7 @@ subscriber.on("message", (channel: string, message: string) => {
   }
 });
 
-// ✅ FIX: handle promise
+
 void subscriber.subscribe("notifications", (err) => {
   if (err) {
     console.error("Failed to subscribe:", err);
@@ -50,10 +49,10 @@ void subscriber.subscribe("notifications", (err) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("✓ Client connected:", socket.id);
+  console.log("Client connected:", socket.id);
 
   socket.on("disconnect", () => {
-    console.log("✗ Client disconnected:", socket.id);
+    console.log("Client disconnected:", socket.id);
   });
 
   socket.on("error", (error) => {
@@ -69,8 +68,8 @@ httpServer.listen(port, "0.0.0.0", () => {
 process.on("SIGINT", () => {
   console.log("Shutting down Socket.io server...");
 
-  void subscriber.unsubscribe(); // ✅ FIX
-  void subscriber.quit();        // ✅ FIX
+  void subscriber.unsubscribe(); 
+  void subscriber.quit();        
 
   httpServer.close(() => {
     console.log("Socket.io server closed");

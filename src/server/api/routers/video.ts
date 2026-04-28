@@ -10,14 +10,7 @@ import { extractYoutubeId, getYoutubeTitle } from "~/lib/youtube";
 import { notificationQueue } from "~/server/queue";
 
 export const videoRouter = createTRPCRouter({
-  // TESTING PURPOSE ONLY
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-    }),
+  
 
   // CREATE VIDEO
   create: protectedProcedure
